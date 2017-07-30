@@ -20,7 +20,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
+    //place your api key here
+    private static final String API_KEY = "";
     public RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
