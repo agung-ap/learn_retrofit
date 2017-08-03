@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import id.developer.agungaprian.learnretrofit.adapter.MoviesAdapter;
 import id.developer.agungaprian.learnretrofit.model.Movie;
 import id.developer.agungaprian.learnretrofit.utils.FetchMoviesData;
+import id.developer.agungaprian.learnretrofit.utils.NetworkReceiver;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     public GridLayoutManager gridLayoutManager;
 
-    private boolean mTwoPane;
+    public NetworkReceiver networkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         popularAdapter = new MoviesAdapter(popularList, this);
         ratedAdapter = new MoviesAdapter(ratedList,this);
         favouriteAdapter = new MoviesAdapter(favouriteList, this);
+
+        networkReceiver = new NetworkReceiver();
 
         if (savedInstanceState != null){
             popularAdapter.addAll(savedInstanceState.<Movie>getParcelableArrayList("POP"));
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //network checker
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -77,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
         gridLayoutManager = new GridLayoutManager(this, 2);
 
         if (getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_PORTRAIT)
+                Configuration.ORIENTATION_PORTRAIT){
             gridLayoutManager.setSpanCount(2);
-        else
+        }else {
             gridLayoutManager.setSpanCount(3);
+        }
 
         switch (SORT_BY){
             case "POPULAR" : recyclerView.setAdapter(popularAdapter);
@@ -89,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "FAVOURITE" : recyclerView.setAdapter(favouriteAdapter);
         }
+
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 
@@ -103,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
             case "FAVOURITE" : menu.findItem(R.id.action_sort_by_favourite).setChecked(true);
                 break;
             }
-        return true;
+
+            return true;
         }
 
     @Override
@@ -125,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         item.setChecked(true);
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -141,5 +146,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        outState.putParcelableArrayList("POP", popularList);
+        outState.putParcelableArrayList("RATED",ratedList);
+        outState.putString("SORT_BY",SORT_BY);
+
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(networkReceiver);
+    }
 }
