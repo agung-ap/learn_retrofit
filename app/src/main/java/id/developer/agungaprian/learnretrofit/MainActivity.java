@@ -4,31 +4,21 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import id.developer.agungaprian.learnretrofit.adapter.MoviesAdapter;
 import id.developer.agungaprian.learnretrofit.model.Movie;
-import id.developer.agungaprian.learnretrofit.model.MovieResponse;
-import id.developer.agungaprian.learnretrofit.rest.ApiClient;
-import id.developer.agungaprian.learnretrofit.rest.ApiInterface;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import id.developer.agungaprian.learnretrofit.utils.FetchMoviesData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    //place your api key here
-    private static final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
 
     public RecyclerView recyclerView;
 
@@ -36,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public MoviesAdapter ratedAdapter;
     public MoviesAdapter favouriteAdapter;
 
-    private String SORT_BY = "POPULAR";
+    public String SORT_BY = "POPULAR";
 
     public ArrayList<Movie> popularList;
     public ArrayList<Movie> ratedList;
@@ -74,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //network checker
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -98,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "FAVOURITE" : recyclerView.setAdapter(favouriteAdapter);
         }
-
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 
@@ -151,45 +141,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class FetchMoviesData extends AsyncTask<String, Void , List<Movie>>{
 
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-            final String sort = params[0];
-            ApiInterface apiService =
-                    ApiClient.getClient().create(ApiInterface.class);
-
-            Call<MovieResponse> call = apiService.getTopRatedFilm(sort,API_KEY);
-            call.enqueue(new Callback<MovieResponse>() {
-                @Override
-                public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                    if (sort.equals("popular")){
-                        for (int i = 0; i < response.body().getResults().size(); i++){
-                           popularList.add(response.body().getResults().get(i));
-                            Log.v(sort, response.body().getResults().get(i).getOriginalTitle());
-                        }
-                        popularAdapter.notifyDataSetChanged();
-                    }else {
-                        for (int i = 0; i < response.body().getResults().size(); i++) {
-                            ratedList.add(response.body().getResults().get(i));
-                            Log.v(sort, response.body().getResults().get(i).getOriginalTitle());
-                        }
-                        ratedAdapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<MovieResponse> call, Throwable t) {
-                    // Log error here since request failed
-                    Log.e(TAG, t.toString());
-                }
-            });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movieModels) {
-
-        }
-    }
 }
