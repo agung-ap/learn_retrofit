@@ -2,7 +2,7 @@ package id.developer.agungaprian.learnretrofit;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,8 +21,9 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     //place your api key here
-    private static final String API_KEY = "";
+    private static final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
     public RecyclerView recyclerView;
+    public MoviesAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "obtain your api key", Toast.LENGTH_SHORT).show();
         }
 
+
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -43,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 List<Movie> movies = response.body().getResults();
                 Log.d(TAG,"number of movies received : " +movies.size());
-                recyclerView.setAdapter(new MoviesAdapter(movies, R.layout.list_item_movie, getApplicationContext()));
+
+                adapter = new MoviesAdapter(movies,R.layout.list_item_movie,getApplicationContext());
+                recyclerView.setAdapter(adapter);
             }
 
             @Override
