@@ -1,5 +1,8 @@
 package id.developer.agungaprian.learnretrofit.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.List;
  * Created by agungaprian on 30/07/17.
  */
 
-public class Movie {
+public class Movie implements Parcelable {
     @SerializedName("poster_path")
     private String posterPath;
     @SerializedName("adult")
@@ -57,6 +60,29 @@ public class Movie {
         this.video = video;
         this.voteAverage = voteAverage;
     }
+
+    protected Movie(Parcel in) {
+        posterPath = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        releaseDate = in.readString();
+        originalTitle = in.readString();
+        originalLanguage = in.readString();
+        title = in.readString();
+        backdropPath = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getPosterPath() {
         final String TMDB_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
@@ -169,5 +195,22 @@ public class Movie {
 
     public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(posterPath);
+        parcel.writeByte((byte) (adult ? 1 : 0));
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeString(originalTitle);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(title);
+        parcel.writeString(backdropPath);
     }
 }

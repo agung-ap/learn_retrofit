@@ -5,29 +5,29 @@
     tools:context="com.subhrajyoti.movies.MainActivity">
 
     <item android:id="@+id/fav"
-        android:title="@string/fav_button_add"
-        android:icon="@drawable/fav_add"
+        android:title="favourite"
+        android:icon="@drawable/ic_action_favorite"
         app:showAsAction="always"
         android:visible="false">
     </item>
     <item android:id="@+id/share"
-        android:icon="@drawable/share"
-        android:title="@string/share_menu"
+        android:icon="@drawable/ic_action_share"
+        android:title="share menu"
         app:showAsAction="always"
         android:visible="false">
     </item>
     <item android:id="@+id/action_sort_by"
-        android:icon="@drawable/sort"
-        android:title="@string/sort_menu"
+        android:icon="@drawable/ic_action_sort"
+        android:title="sort menu"
         app:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="single">
                 <item android:id="@+id/action_sort_by_popularity"
-                    android:title="@string/sort_option_popularity" />
+                    android:title="popular" />
                 <item android:id="@+id/action_sort_by_rating"
-                    android:title="@string/sort_option_rated" />
+                    android:title="top rated" />
                 <item android:id="@+id/action_sort_by_favourite"
-                    android:title="@string/sort_option_favourite" />
+                    android:title="favourite" />
             </group>
         </menu>
     </item>

@@ -1,4 +1,4 @@
-package id.developer.agungaprian.popularmovie.models;
+package id.developer.agungaprian.learnretrofit.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
