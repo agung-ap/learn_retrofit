@@ -1,4 +1,4 @@
-package id.developer.agungaprian.learnretrofit.adapter;
+package id.developer.agungaprian.popularmovies.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import id.developer.agungaprian.learnretrofit.R;
-import id.developer.agungaprian.learnretrofit.model.Movie;
+import id.developer.agungaprian.popularmovies.R;
+import id.developer.agungaprian.popularmovies.model.Movie;
 
 /**
  * Created by agungaprian on 30/07/17.

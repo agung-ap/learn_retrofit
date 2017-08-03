@@ -1,4 +1,4 @@
-package id.developer.agungaprian.learnretrofit.rest;
+package id.developer.agungaprian.popularmovies.rest;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

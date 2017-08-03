@@ -1,22 +1,34 @@
-package id.developer.agungaprian.learnretrofit;
+package id.developer.agungaprian.popularmovies;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import id.developer.agungaprian.learnretrofit.adapter.MoviesAdapter;
-import id.developer.agungaprian.learnretrofit.model.Movie;
-import id.developer.agungaprian.learnretrofit.utils.FetchMoviesData;
-import id.developer.agungaprian.learnretrofit.utils.NetworkReceiver;
+import id.developer.agungaprian.popularmovies.adapter.MoviesAdapter;
+import id.developer.agungaprian.popularmovies.model.Movie;
+import id.developer.agungaprian.popularmovies.model.MovieResponse;
+import id.developer.agungaprian.popularmovies.rest.ApiClient;
+import id.developer.agungaprian.popularmovies.rest.ApiInterface;
+import id.developer.agungaprian.popularmovies.utils.RecyclerTouchListener;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -52,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
         networkReceiver = new NetworkReceiver();
 
+        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+
         if (savedInstanceState != null){
             popularAdapter.addAll(savedInstanceState.<Movie>getParcelableArrayList("POP"));
             ratedAdapter.addAll(savedInstanceState.<Movie>getParcelableArrayList("RATED"));
@@ -63,8 +77,32 @@ public class MainActivity extends AppCompatActivity {
                 (new FetchMoviesData()).execute("top_rated");
             }
         }
+
         setupRecyclerView();
 
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
+                new RecyclerTouchListener.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Movie movie;
+                        switch (SORT_BY){
+                            case "POPULAR":
+                                movie = popularList.get(position);
+                                break;
+                            case "TOP_RATED":
+                                movie = popularList.get(position);
+                                break;
+                            default:
+                                movie = favouriteList.get(position);
+                                break;
+                        }
+
+                        Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+                        intent.putExtra("movie", movie);
+
+                        startActivity(intent);
+                    }
+                }));
     }
 
     //network checker
@@ -114,18 +152,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()){
             case R.id.action_sort_by_popularity:
                 recyclerView.setAdapter(popularAdapter);
                 SORT_BY = "POPULAR";
                 break;
             case R.id.action_sort_by_rating:
-                recyclerView.setAdapter(popularAdapter);
+                recyclerView.setAdapter(ratedAdapter);
                 SORT_BY = "RATED";
                 break;
             case R.id.action_sort_by_favourite:
-                recyclerView.setAdapter(popularAdapter);
+                recyclerView.setAdapter(favouriteAdapter);
                 SORT_BY = "FAVOURITE";
                 break;
         }
@@ -155,9 +192,77 @@ public class MainActivity extends AppCompatActivity {
         outState.putString("SORT_BY",SORT_BY);
 
     }
-    @Override
+
+    /*@Override
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(networkReceiver);
+    }*/
+
+    public class FetchMoviesData extends AsyncTask<String, Void , List<Movie>> {
+        //place your api key here
+        private final String API_KEY = "";
+
+        @Override
+        protected List<Movie> doInBackground(String... params) {
+            final String sort = params[0];
+
+            ApiInterface apiService =
+                    ApiClient.getClient().create(ApiInterface.class);
+
+            Call<MovieResponse> call = apiService.getTopRatedFilm(sort,API_KEY);
+            call.enqueue(new Callback<MovieResponse>() {
+                @Override
+                public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                    if (sort.equals("popular")){
+                        for (int i = 0; i < response.body().getResults().size(); i++){
+                            popularList.add(response.body().getResults().get(i));
+                            Log.v(sort, response.body().getResults().get(i).getOriginalTitle());
+                        }
+                        //popularList = (ArrayList<Movie>) response.body().getResults();
+                        popularAdapter.notifyDataSetChanged();
+                    }else if (sort.equals("top_rated")){
+                        for (int i = 0; i < response.body().getResults().size(); i++) {
+                            ratedList.add(response.body().getResults().get(i));
+                            Log.v(sort, response.body().getResults().get(i).getOriginalTitle());
+                        }
+                        // ratedList = (ArrayList<Movie>) response.body().getResults();
+                        ratedAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<MovieResponse> call, Throwable t) {
+                    // Log error here since request failed
+                    Log.e(TAG, t.toString());
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movieModels) {
+
+        }
     }
+
+    public class NetworkReceiver extends BroadcastReceiver {
+        public ArrayList<Movie> popularList;
+
+        public NetworkReceiver(){
+
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        MainActivity activity = new MainActivity();
+        if (activity.isNetworkAvailable() && popularList.size()!=0) {
+            (new FetchMoviesData()).execute("popular");
+            (new FetchMoviesData()).execute("top_rated");
+        }
+        Toast.makeText(activity, "Jaringan tidak stabil", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 }

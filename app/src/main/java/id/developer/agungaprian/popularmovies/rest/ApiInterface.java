@@ -1,6 +1,6 @@
-package id.developer.agungaprian.learnretrofit.rest;
+package id.developer.agungaprian.popularmovies.rest;
 
-import id.developer.agungaprian.learnretrofit.model.MovieResponse;
+import id.developer.agungaprian.popularmovies.model.MovieResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

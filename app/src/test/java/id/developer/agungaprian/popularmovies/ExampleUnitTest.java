@@ -1,4 +1,4 @@
-package id.developer.agungaprian.learnretrofit;
+package id.developer.agungaprian.popularmovies;
 
 import org.junit.Test;
 

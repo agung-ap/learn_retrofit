@@ -1,4 +1,4 @@
-package id.developer.agungaprian.learnretrofit.model;
+package id.developer.agungaprian.popularmovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,19 +11,23 @@ import java.util.List;
  * Created by agungaprian on 31/07/17.
  */
 
-public class TrailerResponse implements Parcelable{
+public class RiviewResponse implements Parcelable{
+    @SerializedName("page")
+    private int page;
     @SerializedName("id")
     private int id;
     @SerializedName("results")
     private List<Movie> results;
 
-    protected TrailerResponse(Parcel in) {
+    protected RiviewResponse(Parcel in) {
+        page = in.readInt();
         id = in.readInt();
         results = in.createTypedArrayList(Movie.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(page);
         dest.writeInt(id);
         dest.writeTypedList(results);
     }
@@ -33,23 +37,31 @@ public class TrailerResponse implements Parcelable{
         return 0;
     }
 
-    public static final Creator<TrailerResponse> CREATOR = new Creator<TrailerResponse>() {
+    public static final Creator<RiviewResponse> CREATOR = new Creator<RiviewResponse>() {
         @Override
-        public TrailerResponse createFromParcel(Parcel in) {
-            return new TrailerResponse(in);
+        public RiviewResponse createFromParcel(Parcel in) {
+            return new RiviewResponse(in);
         }
 
         @Override
-        public TrailerResponse[] newArray(int size) {
-            return new TrailerResponse[size];
+        public RiviewResponse[] newArray(int size) {
+            return new RiviewResponse[size];
         }
     };
 
     public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setPage(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
