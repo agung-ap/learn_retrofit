@@ -17,12 +17,12 @@ public class RiviewResponse implements Parcelable{
     @SerializedName("id")
     private int id;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<Riview> results;
 
     protected RiviewResponse(Parcel in) {
         page = in.readInt();
         id = in.readInt();
-        results = in.createTypedArrayList(Movie.CREATOR);
+        results = in.createTypedArrayList(Riview.CREATOR);
     }
 
     @Override
@@ -65,11 +65,11 @@ public class RiviewResponse implements Parcelable{
         this.id = id;
     }
 
-    public List<Movie> getResults() {
+    public List<Riview> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<Riview> results) {
         this.results = results;
     }
 }

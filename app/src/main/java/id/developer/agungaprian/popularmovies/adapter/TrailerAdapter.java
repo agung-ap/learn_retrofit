@@ -51,6 +51,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
 
     public class TrailerViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+
         public TrailerViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView)itemView.findViewById(R.id.trailerImage);
