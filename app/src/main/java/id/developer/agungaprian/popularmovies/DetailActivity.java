@@ -42,7 +42,7 @@ import retrofit2.Response;
  */
 
 public class DetailActivity extends AppCompatActivity {
-    Movie movieModel;
+    Movie movies;
 
     @Bind(R.id.imageView)
     ImageView imageView;
@@ -81,7 +81,8 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        movieModel = getIntent().getParcelableExtra("movieModel");
+        movies = new Movie();
+        movies = getIntent().getParcelableExtra("movies");
 
         trailerList = new ArrayList<>();
         riviewList = new ArrayList<>();
@@ -89,24 +90,24 @@ public class DetailActivity extends AppCompatActivity {
         trailerAdapter = new TrailerAdapter(this,trailerList);
         riviewAdapter = new RiviewAdapter(this,riviewList);
 
-        titleView.setText(movieModel.getOriginalTitle());
+        titleView.setText(movies.getOriginalTitle());
 
         Picasso.with(this)
-                .load(movieModel.getPosterPath())
+                .load(movies.getPosterPath())
                 .placeholder(R.drawable.ic_action_placeholder)
                 .error(R.drawable.broken_image)
                 .into(imageView);
 
-        Log.v("rating bar ", "total : " + movieModel.getVoteAverage());
-        rating.setText(String.valueOf(movieModel.getVoteAverage()).concat("/10"));
+        Log.v("rating bar ", "total : " + String.valueOf(movies.getVoteAverage()));
+        rating.setText(String.valueOf(movies.getVoteAverage()).concat("/10"));
         ratingBar.setMax(5);
-        ratingBar.setRating(movieModel.getVoteAverage() / 2f);
+        ratingBar.setRating(movies.getVoteAverage() / 2f);
 
-        overview.setText(movieModel.getOverview());
-        releaseText.setText("Release Date: ".concat(movieModel.getReleaseDate()));
+        overview.setText(movies.getOverview());
+        releaseText.setText("Release Date: ".concat(movies.getReleaseDate()));
 
-        //(new FetchRiviewData()).execute(Integer.toString(movieModel.getId()));
-        //(new FetchTrailerData()).execute(Integer.toString(movieModel.getId()));
+        //(new FetchRiviewData()).execute(Integer.toString(movies.getId()));
+        //(new FetchTrailerData()).execute(Integer.toString(movies.getId()));
 
         if (!isNetworkAvailable())
             extraLayout.setVisibility(View.INVISIBLE);

@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 new RecyclerTouchListener.OnItemClickListener(){
                     @Override
                     public void onItemClick(View view, int position) {
-                        Movie movie;
+                        Movie movie = null;
                         switch (SORT_BY){
                             case "POPULAR":
                                 movie = popularList.get(position);
@@ -92,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
                             case "TOP_RATED":
                                 movie = ratedList.get(position);
                                 break;
-                            default:
+                            /*default:
                                 movie = favouriteList.get(position);
-                                break;
+                                break;*/
                         }
 
                         Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-                        intent.putExtra("movieModel", movie);
+                        intent.putExtra("movies", movie);
 
                         startActivity(intent);
                     }
