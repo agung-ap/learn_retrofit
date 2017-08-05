@@ -15,11 +15,11 @@ public class TrailerResponse implements Parcelable{
     @SerializedName("id")
     private int id;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<Trailer> results;
 
     protected TrailerResponse(Parcel in) {
         id = in.readInt();
-        results = in.createTypedArrayList(Movie.CREATOR);
+        results = in.createTypedArrayList(Trailer.CREATOR);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class TrailerResponse implements Parcelable{
         this.id = id;
     }
 
-    public List<Movie> getResults() {
+    public List<Trailer> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<Trailer> results) {
         this.results = results;
     }
 }

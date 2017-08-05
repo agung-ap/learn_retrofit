@@ -59,9 +59,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public void onBindViewHolder(MovieViewHolder holder, final int position) {
-        //load image recyclerview
+        //load image to recyclerview
         Picasso.with(context)
                 .load(movies.get(position).getPosterPath())
+                .placeholder(R.drawable.ic_action_placeholder)
                 //.resize(context.getResources().getInteger(R.integer.tmdb_poster_w185_height),
                     //    context.getResources().getInteger(R.integer.tmdb_poster_w185_width))
                 .error(R.drawable.broken_image)

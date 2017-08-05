@@ -1,6 +1,5 @@
 package id.developer.agungaprian.popularmovies;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,11 +14,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import id.developer.agungaprian.popularmovies.adapter.MoviesAdapter;
 import id.developer.agungaprian.popularmovies.model.Movie;
 import id.developer.agungaprian.popularmovies.model.MovieResponse;
@@ -33,6 +33,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    @Bind(R.id.recycler_view)
     public RecyclerView recyclerView;
 
     public MoviesAdapter popularAdapter;
@@ -47,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
     public GridLayoutManager gridLayoutManager;
 
-    public NetworkReceiver networkReceiver;
+    //public NetworkReceiver networkReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         popularList = new ArrayList<>();
         ratedList = new ArrayList<>();
@@ -62,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
         ratedAdapter = new MoviesAdapter(ratedList,this);
         favouriteAdapter = new MoviesAdapter(favouriteList, this);
 
-        networkReceiver = new NetworkReceiver();
-
-        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        //networkReceiver = new NetworkReceiver();
 
         if (savedInstanceState != null){
             popularAdapter.addAll(savedInstanceState.<Movie>getParcelableArrayList("POP"));
@@ -72,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
             SORT_BY = savedInstanceState.getString("SORT_BY");
         }else {
             if (isNetworkAvailable()) {
-
                 (new FetchMoviesData()).execute("popular");
                 (new FetchMoviesData()).execute("top_rated");
             }
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
-                        intent.putExtra("movie", movie);
+                        intent.putExtra("movieModel", movie);
 
                         startActivity(intent);
                     }
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class FetchMoviesData extends AsyncTask<String, Void , List<Movie>> {
         //place your api key here
-        private final String API_KEY = "";
+        private final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
 
         @Override
         protected List<Movie> doInBackground(String... params) {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
 
-            Call<MovieResponse> call = apiService.getTopRatedFilm(sort,API_KEY);
+            Call<MovieResponse> call = apiService.loadMovies(sort,API_KEY);
             call.enqueue(new Callback<MovieResponse>() {
                 @Override
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class NetworkReceiver extends BroadcastReceiver {
+    /*public class NetworkReceiver extends BroadcastReceiver {
         public ArrayList<Movie> popularList;
 
         public NetworkReceiver(){
@@ -263,6 +263,24 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(activity, "Jaringan tidak stabil", Toast.LENGTH_SHORT).show();
 
         }
-    }
+    }*/
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

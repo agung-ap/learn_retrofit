@@ -1,6 +1,8 @@
 package id.developer.agungaprian.popularmovies.rest;
 
 import id.developer.agungaprian.popularmovies.model.MovieResponse;
+import id.developer.agungaprian.popularmovies.model.RiviewResponse;
+import id.developer.agungaprian.popularmovies.model.TrailerResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -12,8 +14,11 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
     @GET("movie/{sort}")
-    Call<MovieResponse> getTopRatedFilm(@Path("sort") String sorting , @Query("api_key") String apiKey);
+    Call<MovieResponse> loadMovies(@Path("sort") String sorting , @Query("api_key") String apiKey);
 
-    @GET("movie/{id}")
-    Call<MovieResponse> getMovieDetail(@Path("id") int id , @Query("api_key") String apiKey);
+    @GET("/3/movie/{id}/videos")
+    Call<TrailerResponse> loadTrailers(@Path("id") String id, @Query("api_key") String api_key);
+
+    @GET("/3/movie/{id}/reviews")
+    Call<RiviewResponse> loadRiviews(@Path("id") String id, @Query("api_key") String api_key);
 }
