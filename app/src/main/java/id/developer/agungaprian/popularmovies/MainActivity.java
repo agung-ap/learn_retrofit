@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                             case "POPULAR":
                                 movie = popularList.get(position);
                                 break;
-                            case "TOP_RATED":
+                            case "RATED":
                                 movie = ratedList.get(position);
                                 break;
                             /*default:
