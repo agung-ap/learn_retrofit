@@ -125,9 +125,8 @@ public class DetailActivity extends AppCompatActivity {
 
         releaseText.setText("Release Date: ".concat(releaseDate));
 
-        //set id movie to trailer and review response
-        //TrailerResponse trailerResponse = new TrailerResponse(movies.getId());
-        //RiviewResponse riviewResponse = new RiviewResponse(movies.getId());
+        (new FetchRiviewData()).execute(String.valueOf(movies.getId()));
+        (new FetchTrailerData()).execute(String.valueOf(movies.getId()));
 
         if (!isNetworkAvailable())
             extraLayout.setVisibility(View.INVISIBLE);
