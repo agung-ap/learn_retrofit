@@ -108,7 +108,22 @@ public class DetailActivity extends AppCompatActivity {
         ratingBar.setRating(movies.getVoteAverage() / 2f);
 
         overview.setText(movies.getOverview());
-        releaseText.setText("Release Date: ".concat(movies.getReleaseDate()));
+
+        String releaseDate = movies.getReleaseDate();
+
+        /*if(releaseDate != null) {
+            try {
+                releaseDate = DateTimeHelper.getLocalizedDate(this,
+                        releaseDate, movies.getDateFormat());
+            } catch (ParseException e) {
+                Log.e("LOG_TAG ", "Error with parsing movie release date", e);
+            }
+        } else {
+            releaseText.setTypeface(null, Typeface.ITALIC);
+            releaseDate = "no release date found";
+        }*/
+
+        releaseText.setText("Release Date: ".concat(releaseDate));
 
         //set id movie to trailer and review response
         //TrailerResponse trailerResponse = new TrailerResponse(movies.getId());
@@ -118,7 +133,7 @@ public class DetailActivity extends AppCompatActivity {
             extraLayout.setVisibility(View.INVISIBLE);
         else {
             //(new FetchRiviewData()).execute(String.valueOf(movies.getId()));
-            (new FetchTrailerData()).execute(String.valueOf(movies.getId()));
+            //(new FetchTrailerData()).execute(String.valueOf(movies.getId()));
         }
 
         //set layout manager for recycler view
@@ -167,7 +182,7 @@ public class DetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     //get data from trailer api
-    public class FetchTrailerData extends AsyncTask<String, Void , List<Trailer>>{
+    public class FetchTrailerData extends AsyncTask<String, Void , List<Trailer>> {
         //place your api key here
         private final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
 
@@ -181,6 +196,8 @@ public class DetailActivity extends AppCompatActivity {
             call.enqueue(new Callback<TrailerResponse>() {
                 @Override
                 public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                    Log.v("TAG ","response.raw().request().url();"+response.raw().request().url());
+
                     for (int i = 0 ; i < response.body().getResults().size(); i++){
                         trailerList.add(response.body().getResults().get(i));
                     }
@@ -220,7 +237,7 @@ public class DetailActivity extends AppCompatActivity {
             call.enqueue(new Callback<RiviewResponse>() {
                 @Override
                 public void onResponse(Call<RiviewResponse> call, Response<RiviewResponse> response) {
-                    //Log.v("dapatkan response ", "result : " + response.body().getResults());
+                    Log.v("dapatkan response ", "result : " + response.body().getResults());
                     for (int i = 0 ; i < response.body().getResults().size(); i++){
                         riviewList.add(response.body().getResults().get(i));
                     }
@@ -234,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<RiviewResponse> call, Throwable t) {
-
+                    t.printStackTrace();
                 }
             });
             return null;

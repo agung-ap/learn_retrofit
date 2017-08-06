@@ -13,6 +13,8 @@ import java.util.List;
  */
 
 public class Movie implements Parcelable {
+    //private static final String DATE_FORMAT = "dd-MM-yyyy";
+
     @SerializedName("poster_path")
     private String posterPath;
     @SerializedName("adult")
@@ -46,6 +48,7 @@ public class Movie implements Parcelable {
 
     }
 
+
     protected Movie(Parcel in) {
         posterPath = in.readString();
         adult = in.readByte() != 0;
@@ -70,6 +73,25 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(posterPath);
+        parcel.writeByte((byte) (adult ? 1 : 0));
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeString(originalTitle);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(title);
+        parcel.writeString(backdropPath);
+        parcel.writeFloat(voteAverage);
+        parcel.writeInt(id);
+    }
 
     public String getPosterPath() {
         final String TMDB_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w185";
@@ -101,6 +123,9 @@ public class Movie implements Parcelable {
     }
 
     public void setReleaseDate(String releaseDate) {
+        if(!releaseDate.equals("null")) {
+            this.releaseDate = releaseDate;
+        }
         this.releaseDate = releaseDate;
     }
 
@@ -176,30 +201,19 @@ public class Movie implements Parcelable {
         this.video = video;
     }
 
-    public Float getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(Float voteAverage) {
+    public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+    /*public String getDateFormat() {
+        return DATE_FORMAT;
+    }*/
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(posterPath);
-        parcel.writeByte((byte) (adult ? 1 : 0));
-        parcel.writeString(overview);
-        parcel.writeString(releaseDate);
-        parcel.writeString(originalTitle);
-        parcel.writeString(originalLanguage);
-        parcel.writeString(title);
-        parcel.writeString(backdropPath);
-        parcel.writeInt(id);
-        parcel.writeFloat(voteAverage);
+    public static Creator<Movie> getCREATOR() {
+        return CREATOR;
     }
 }
