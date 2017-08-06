@@ -106,8 +106,12 @@ public class DetailActivity extends AppCompatActivity {
         overview.setText(movies.getOverview());
         releaseText.setText("Release Date: ".concat(movies.getReleaseDate()));
 
-        //(new FetchRiviewData()).execute(Integer.toString(movies.getId()));
-        //(new FetchTrailerData()).execute(Integer.toString(movies.getId()));
+        //set id movie to trailer and review response
+        TrailerResponse trailerResponse = new TrailerResponse(movies.getId());
+        RiviewResponse riviewResponse = new RiviewResponse(movies.getId());
+
+        (new FetchRiviewData()).execute(String.valueOf(riviewResponse));
+        (new FetchTrailerData()).execute(String.valueOf(trailerResponse));
 
         if (!isNetworkAvailable())
             extraLayout.setVisibility(View.INVISIBLE);
@@ -115,6 +119,9 @@ public class DetailActivity extends AppCompatActivity {
         LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(getApplicationContext()
                 ,LinearLayoutManager.HORIZONTAL,false);
         LinearLayoutManager riviewLayoutManager = new LinearLayoutManager(getApplicationContext());
+
+        trailersRecyclerView.setAdapter(trailerAdapter);
+        riviewsRecyclerView.setAdapter(riviewAdapter);
 
         trailersRecyclerView.setLayoutManager(trailerLayoutManager);
         riviewsRecyclerView.setLayoutManager(riviewLayoutManager);

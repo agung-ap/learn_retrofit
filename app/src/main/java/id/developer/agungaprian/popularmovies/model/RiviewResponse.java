@@ -19,6 +19,10 @@ public class RiviewResponse implements Parcelable{
     @SerializedName("results")
     private List<Riview> results;
 
+    public RiviewResponse(int id){
+        this.id = id;
+    }
+
     protected RiviewResponse(Parcel in) {
         page = in.readInt();
         id = in.readInt();
