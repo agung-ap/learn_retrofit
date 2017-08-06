@@ -84,14 +84,18 @@ public class DetailActivity extends AppCompatActivity {
         movies = new Movie();
         movies = getIntent().getParcelableExtra("movies");
 
+        //init ArrayList
         trailerList = new ArrayList<>();
         riviewList = new ArrayList<>();
 
+        //init adapter
         trailerAdapter = new TrailerAdapter(this,trailerList);
         riviewAdapter = new RiviewAdapter(this,riviewList);
 
+        //set original title from json
         titleView.setText(movies.getOriginalTitle());
 
+        //load image poster
         Picasso.with(this)
                 .load(movies.getPosterPath())
                 .placeholder(R.drawable.ic_action_placeholder)
@@ -107,19 +111,23 @@ public class DetailActivity extends AppCompatActivity {
         releaseText.setText("Release Date: ".concat(movies.getReleaseDate()));
 
         //set id movie to trailer and review response
-        TrailerResponse trailerResponse = new TrailerResponse(movies.getId());
-        RiviewResponse riviewResponse = new RiviewResponse(movies.getId());
-
-        (new FetchRiviewData()).execute(String.valueOf(riviewResponse));
-        (new FetchTrailerData()).execute(String.valueOf(trailerResponse));
+        //TrailerResponse trailerResponse = new TrailerResponse(movies.getId());
+        //RiviewResponse riviewResponse = new RiviewResponse(movies.getId());
 
         if (!isNetworkAvailable())
             extraLayout.setVisibility(View.INVISIBLE);
+        else {
+            //(new FetchRiviewData()).execute(String.valueOf(movies.getId()));
+            (new FetchTrailerData()).execute(String.valueOf(movies.getId()));
+        }
 
+        //set layout manager for recycler view
         LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(getApplicationContext()
                 ,LinearLayoutManager.HORIZONTAL,false);
-        LinearLayoutManager riviewLayoutManager = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager riviewLayoutManager = new LinearLayoutManager(getApplicationContext()
+                ,LinearLayoutManager.VERTICAL, false);
 
+        //set adapter to recycler view
         trailersRecyclerView.setAdapter(trailerAdapter);
         riviewsRecyclerView.setAdapter(riviewAdapter);
 
@@ -128,7 +136,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
     }
-
+    //check network state
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getApplicationContext().getSystemService(
@@ -158,7 +166,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    //get data from trailer api
     public class FetchTrailerData extends AsyncTask<String, Void , List<Trailer>>{
         //place your api key here
         private final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
@@ -194,10 +202,10 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Trailer> trailers) {
-            super.onPostExecute(trailers);
+            //super.onPostExecute(trailers);
         }
     }
-
+    //get data from review api
     public class FetchRiviewData extends AsyncTask<String, Void , List<Riview>>{
         //place your api key here
         private final String API_KEY = "5dcd6ed59f6311eeeaeb846201f551b6";
@@ -212,6 +220,7 @@ public class DetailActivity extends AppCompatActivity {
             call.enqueue(new Callback<RiviewResponse>() {
                 @Override
                 public void onResponse(Call<RiviewResponse> call, Response<RiviewResponse> response) {
+                    //Log.v("dapatkan response ", "result : " + response.body().getResults());
                     for (int i = 0 ; i < response.body().getResults().size(); i++){
                         riviewList.add(response.body().getResults().get(i));
                     }
@@ -233,7 +242,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Riview> riviews) {
-            super.onPostExecute(riviews);
+            //super.onPostExecute(riviews);
         }
     }
 }

@@ -17,9 +17,9 @@ public class TrailerResponse implements Parcelable{
     @SerializedName("results")
     private List<Trailer> results;
 
-    public TrailerResponse(int id){
+    /*public TrailerResponse(int id){
         this.id = id;
-    }
+    }*/
 
     protected TrailerResponse(Parcel in) {
         id = in.readInt();

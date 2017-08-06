@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,11 +18,11 @@ public class RiviewResponse implements Parcelable{
     @SerializedName("id")
     private int id;
     @SerializedName("results")
-    private List<Riview> results;
+    private List<Riview> results = new ArrayList<>();
 
-    public RiviewResponse(int id){
+    /*public RiviewResponse(int id){
         this.id = id;
-    }
+    }*/
 
     protected RiviewResponse(Parcel in) {
         page = in.readInt();

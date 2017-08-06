@@ -16,9 +16,9 @@ public interface ApiInterface {
     @GET("movie/{sort}")
     Call<MovieResponse> loadMovies(@Path("sort") String sorting , @Query("api_key") String apiKey);
 
-    @GET("/3/movie/{id}/videos")
+    @GET("movie/{id}/videos")
     Call<TrailerResponse> loadTrailers(@Path("id") String id, @Query("api_key") String api_key);
 
-    @GET("/3/movie/{id}/reviews")
+    @GET("movie/{id}/reviews")
     Call<RiviewResponse> loadRiviews(@Path("id") String id, @Query("api_key") String api_key);
 }
